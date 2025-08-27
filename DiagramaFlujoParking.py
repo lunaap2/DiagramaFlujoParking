@@ -370,6 +370,34 @@ class GeneradorDiagramaParqueadero:
                 .grafico:hover {{
                     transform: scale(1.02);
                 }}
+                .download-button {{
+                    display: inline-block;
+                    margin: 20px auto;
+                    padding: 12px 24px;
+                    background: linear-gradient(135deg, #28a745, #20c997);
+                    color: white;
+                    text-decoration: none;
+                    border-radius: 25px;
+                    font-weight: 600;
+                    font-size: 1.1em;
+                    box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+                    transition: all 0.3s ease;
+                    border: none;
+                    cursor: pointer;
+                }}
+                .download-button:hover {{
+                    background: linear-gradient(135deg, #34ce57, #17a2b8);
+                    box-shadow: 0 8px 25px rgba(40, 167, 69, 0.6);
+                    transform: translateY(-2px);
+                }}
+                .download-container {{
+                    text-align: center;
+                    margin: 20px 0;
+                    padding: 20px;
+                    background: rgba(255, 255, 255, 0.1);
+                    border-radius: 15px;
+                    backdrop-filter: blur(10px);
+                }}
                 .seccion {{
                     background: rgba(255, 255, 255, 0.96);
                     padding: 30px;
@@ -427,10 +455,42 @@ class GeneradorDiagramaParqueadero:
                     border-radius: 15px;
                 }}
             </style>
+            <script>
+                function descargarDiagrama() {{
+                    const img = document.querySelector('.grafico');
+                    const link = document.createElement('a');
+                    link.href = img.src;
+                    link.download = 'diagrama_sistema_parqueadero.png';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    
+                    // Mostrar mensaje de confirmación
+                    const button = document.querySelector('.download-button');
+                    const originalText = button.textContent;
+                    button.textContent = '✓ Descarga iniciada';
+                    button.style.background = 'linear-gradient(135deg, #28a745, #20c997)';
+                    
+                    setTimeout(() => {{
+                        button.textContent = originalText;
+                        button.style.background = 'linear-gradient(135deg, #28a745, #20c997)';
+                    }}, 2000);
+                }}
+            </script>
         </head>
         <body>
             <div class="container">
                 <h1>🚗 {self.titulo} - Con Flechas Moradas Mejoradas</h1>
+                
+                <div class="download-container">
+                    <button class="download-button" onclick="descargarDiagrama()">
+                        📥 Descargar Diagrama PNG
+                    </button>
+                    <p style="color: white; margin-top: 10px; font-size: 0.9em; opacity: 0.8;">
+                        Haz clic para descargar el diagrama en alta resolución
+                    </p>
+                </div>
+                
                 {"".join([f'<div class="seccion">{sec}</div>' for sec in self.secciones])}
                 <footer>
                     &copy; {self.titulo} - Flechas Moradas con Punta hacia la Izquierda<br>
@@ -456,13 +516,14 @@ if __name__ == "__main__":
     # Descripción de mejoras
     mejoras = """
     <div class="descripcion">
-        <h3>✨ Mejoras en las Flechas Moradas</h3>
+        <h3>✨ Mejoras en las Flechas Moradas y Funcionalidad</h3>
         <ul>
             <li><strong>🏹 Punta de Flecha:</strong> Las flechas moradas ahora tienen una punta que apunta hacia la izquierda.</li>
             <li><strong>🎯 Dirección Clara:</strong> Indica visualmente la dirección del flujo de retorno desde los rombos hacia la línea lateral.</li>
             <li><strong>📏 Posicionamiento Preciso:</strong> La punta se posiciona correctamente en el extremo izquierdo de cada línea horizontal.</li>
             <li><strong>🔄 Consistencia Visual:</strong> Mantiene el color morado y el grosor consistente con el resto del sistema de retorno.</li>
             <li><strong>🎨 Claridad de Flujo:</strong> Mejora la comprensión del diagrama mostrando claramente la dirección del retorno al menú.</li>
+            <li><strong>📥 Descarga PNG:</strong> Botón interactivo para descargar el diagrama en formato PNG de alta resolución.</li>
         </ul>
     </div>
     """
@@ -477,6 +538,8 @@ if __name__ == "__main__":
             <li><strong>Parámetros de la Punta:</strong> head_width=0.3, head_length=0.3 para proporción adecuada</li>
             <li><strong>Posicionamiento:</strong> La punta se dibuja con un pequeño offset (0.4) desde el punto izquierdo</li>
             <li><strong>Integración:</strong> Se mantiene la funcionalidad existente agregando solo la mejora visual</li>
+            <li><strong>Función de Descarga:</strong> JavaScript que convierte la imagen base64 en un enlace descargable</li>
+            <li><strong>UX del Botón:</strong> Feedback visual que confirma la descarga con animación y cambio de texto temporal</li>
         </ul>
     </div>
     """
